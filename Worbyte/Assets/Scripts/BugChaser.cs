@@ -1,12 +1,19 @@
 using UnityEngine;
 
-public class BugChaser : MonoBehaviour
+public class BugChaser : MonoBehaviour, ISpeedScalable
 {
     [SerializeField] private Transform target;
     [SerializeField] private float speed = 2f;
     [SerializeField] private bool destroyOnHit = true;
 
     private PlayerHealth targetHealth;
+    private float speedMultiplier = 1f;
+
+    // Called by EnemySpawner when the bug spawns
+    public void SetSpeedMultiplier(float multiplier)
+    {
+        speedMultiplier = multiplier;
+    }
 
     private void Start()
     {
@@ -27,7 +34,7 @@ public class BugChaser : MonoBehaviour
         if (dir.sqrMagnitude < 0.01f) return;
 
         transform.rotation = Quaternion.LookRotation(dir);
-        transform.position += dir.normalized * speed * Time.deltaTime;
+        transform.position += dir.normalized * speed * speedMultiplier * Time.deltaTime;
     }
 
     private void OnTriggerEnter(Collider other)
